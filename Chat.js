@@ -13,11 +13,6 @@ const chatSchema = new mongoose.Schema({
         required:true
     },
 
-    title:{
-        type:String,
-        default:"New Chat"
-    },
-
     role:{
         type:String,
         required:true
