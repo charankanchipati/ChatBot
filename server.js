@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 
 
 const { chatWithAI } = require("./aiService");
-const Chat = require("./chat");
+const Chat = require("./Chat");
 
 
 
