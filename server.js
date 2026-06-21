@@ -5,6 +5,9 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
+const {
+getEventPlanningContext
+}=require("./datePlanner");
 
 const { chatWithAI } = require("./aiService");
 const Chat = require("./Chat");
@@ -27,7 +30,9 @@ app.use(express.json());
 // MongoDB Connection
 
 
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI, {
+    serverSelectionTimeoutMS: 30000
+})
 
 .then(()=>{
 
@@ -207,7 +212,37 @@ history.push({
 // AI Generate Response
 
 
-const reply = await chatWithAI(history);
+const dateContext =
+getEventPlanningContext(message);
+
+
+
+history.unshift({
+
+role:"system",
+
+text:
+dateContext
+
+});
+mongoose.connect(process.env.MONGO_URI,{
+    serverSelectionTimeoutMS:30000,
+    tls:true
+})
+.then(()=>{
+    console.log("MongoDB Connected");
+})
+.catch((error)=>{
+    console.log(
+        "MongoDB Error:",
+        error.message
+    );
+});
+
+
+
+const reply =
+await chatWithAI(history);
 
 
 
